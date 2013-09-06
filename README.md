@@ -1,7 +1,7 @@
 sml
 ===
 
-Static Map Light originally made by Gerhard Koch
+Static Map Light originally made by Gerhard Koch, hosted on SF here: http://sourceforge.net/projects/staticmaplite/ last modified in 2010. I assume the project is no longer under development - so I've put it up on gitbutt here.
 
 Modified by Chris Tooley
 
@@ -27,7 +27,7 @@ Optional parameters
 
 Original Author
 ---
-Gerhard Koch <gerhard.koch AT ymail.com>
+Gerhard Koch gerhard.koch AT ymail.com
 
 Modified by
 ---
