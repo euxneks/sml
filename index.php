@@ -68,7 +68,7 @@ Class staticMapLite {
 		global $_GET;
 		
 		// get zoom from GET paramter
-		$this->zoom = $_GET['zoom']?intval($_GET['zoom']):0;
+		$this->zoom = !empty($_GET['zoom'])?intval($_GET['zoom']):4;
 		if($this->zoom>18)$this->zoom = 18;
 		
 		// get lat and lon from GET paramter
@@ -81,11 +81,8 @@ Class staticMapLite {
 			list($this->width, $this->height) = explode('x',$_GET['size']);
 			$this->width = intval($this->width);
 			$this->height = intval($this->height);
-        } else {
-            //choose default
-            $this->width = 800;
-            $this->height = 600;
         }
+
 		if(!empty($_GET['markers'])){
 			$markers = explode('%7C|\|',$_GET['markers']);
 			foreach($markers as $marker){
@@ -95,11 +92,10 @@ Class staticMapLite {
 					$markerImage = basename($markerImage);
 					$this->markers[] = array('lat'=>$markerLat, 'lon'=>$markerLon, 'image'=>$markerImage);
 			}
-		}
+        }
+
 		if(!empty( $_GET['maptype'] )){
 			if(array_key_exists($_GET['maptype'],$this->tileSrcUrl)) $this->maptype = $_GET['maptype'];
-        } else {
-            $this->maptype = 'mapnik';
         }
 	}
 
