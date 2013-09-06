@@ -198,7 +198,8 @@ Class staticMapLite {
 	}
 	public function writeTileToCache($url, $data){
         $filename = $this->tileUrlToFilename($url);
-		$this->mkdir_recursive(dirname($filename),0777);
+        $this->mkdir_recursive(dirname($filename),0777);
+        touch( $filename );
 		file_put_contents($filename, $data);
 	}
 	
@@ -245,7 +246,8 @@ Class staticMapLite {
 			if(!$this->checkMapCache()){
 				// map is not in cache, needs to be build
 				$this->makeMap();
-				$this->mkdir_recursive(dirname($this->mapCacheIDToFilename()),0777);
+                $this->mkdir_recursive(dirname($this->mapCacheIDToFilename()),0777);
+                touch( $this->image );
 				imagepng($this->image,$this->mapCacheIDToFilename(),9);
 				$this->sendHeader();	
 				if(file_exists($this->mapCacheIDToFilename())){
