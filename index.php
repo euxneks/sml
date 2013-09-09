@@ -86,11 +86,13 @@ Class staticMapLite {
 		if(!empty($_GET['markers'])){
 			$markers = explode('%7C|\|',$_GET['markers']);
 			foreach($markers as $marker){
-					list($markerLat, $markerLon, $markerImage) = explode(',',$marker);
+					list($markerLat, $markerLon, $markerImage, $pointX, $pointY) = explode(',',$marker);
 					$markerLat = floatval($markerLat);
 					$markerLon = floatval($markerLon);
-					$markerImage = basename($markerImage);
-					$this->markers[] = array('lat'=>$markerLat, 'lon'=>$markerLon, 'image'=>$markerImage);
+                    $markerImage = basename($markerImage);
+                    $pointX = intval( $pointX );
+                    $pointY = intval( $pointY );
+					$this->markers[] = array('lat'=>$markerLat, 'lon'=>$markerLon, 'image'=>$markerImage, 'pointY'=>$pointY, 'pointX'=>$pointX);
 			}
         }
 
@@ -154,7 +156,8 @@ Class staticMapLite {
 			$destX = floor(($this->width/2)-$this->tileSize*($this->centerX-$this->lonToTile($markerLon, $this->zoom)));
 			$destY = floor(($this->height/2)-$this->tileSize*($this->centerY-$this->latToTile($markerLat, $this->zoom)));
 			$destY = $destY - imagesy($markerImg);
-
+            $destY = $destY + $marker[ 'pointY' ];
+            $destX = $destX - $marker[ 'pointX' ];
 			imagecopy($this->image, $markerImg, $destX, $destY, 0, 0, imagesx($markerImg), imagesy($markerImg));
 		
 	};
