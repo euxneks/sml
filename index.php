@@ -55,7 +55,7 @@ Class staticMapLite {
 	protected $centerX, $centerY, $offsetX, $offsetY;
 
 	public function __construct(){
-		$this->zoom = 0;
+		$this->zoom = 4; //default zoom
 		$this->lat = 0;
 		$this->lon = 0;
 		$this->width = 500;
@@ -67,24 +67,47 @@ Class staticMapLite {
 	public function parseParams(){
 		global $_GET;
 		
-		// get zoom from GET paramter
-		$this->zoom = !empty($_GET['zoom'])?intval($_GET['zoom']):4;
-		if($this->zoom>18)$this->zoom = 18;
+        // get zoom from GET paramter
+        if ( !empty( $_GET['zoom'] ) || !empty( $_GET[ 'z' ] ) ) {
+            if( !empty( $_GET['zoom'] ) ){
+                $this->zoom = intval( $_GET[ 'zoom' ] );
+            } else {
+                $this->zoom = intval( $_GET[ 'z' ] );
+            }
+        }
+        if($this->zoom>18)$this->zoom = 18;
+        if($this->zoom<0)$this->zoom = 0; //min zoom
 		
-		// get lat and lon from GET paramter
-		list($this->lat,$this->lon) = explode(',',$_GET['center']);
+        // get lat and lon from GET paramter
+        if ( !empty( $_GET['center'] ) ) {
+            list($this->lat,$this->lon) = explode(',',$_GET['center']);
+        } else {
+            if ( empty( $_GET['c'] ) ) {
+                //no center, this is not a valid request
+                return;
+            }
+            list($this->lat,$this->lon) = explode(',',$_GET['c']);
+        }
 		$this->lat = floatval($this->lat);
 		$this->lon = floatval($this->lon);
 		
 		// get zoom from GET paramter
-		if(!empty( $_GET['size'] )){
-			list($this->width, $this->height) = explode('x',$_GET['size']);
+        if(!empty( $_GET['size'] ) || !empty( $_GET[ 's' ] )){
+            if ( !empty( $_GET[ 'size' ] ) ) {
+                list($this->width, $this->height) = explode('x',$_GET['size']);
+            } else {
+                list($this->width, $this->height) = explode('x',$_GET['s']);
+            }
 			$this->width = intval($this->width);
 			$this->height = intval($this->height);
         }
 
-		if(!empty($_GET['markers'])){
-			$markers = explode('%7C|\|',$_GET['markers']);
+        if(!empty($_GET['m']) || !empty( $_GET['markers'] )){
+            if ( !empty( $_GET['markers'] ) ) {
+                $markers = explode('%7C|\|',$_GET['markers']);
+            } else {
+                $markers = explode('%7C|\|',$_GET['m']);
+            }
 			foreach($markers as $marker){
 					list($markerLat, $markerLon, $markerImage, $pointX, $pointY) = explode(',',$marker);
 					$markerLat = floatval($markerLat);
@@ -98,6 +121,9 @@ Class staticMapLite {
 
 		if(!empty( $_GET['maptype'] )){
 			if(array_key_exists($_GET['maptype'],$this->tileSrcUrl)) $this->maptype = $_GET['maptype'];
+        }
+		if(!empty( $_GET['mt'] )){
+			if(array_key_exists($_GET['mt'],$this->tileSrcUrl)) $this->maptype = $_GET['mt'];
         }
 	}
 
